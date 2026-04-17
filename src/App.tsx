@@ -31,9 +31,10 @@ export default function App() {
   const [markhor, setMarkhor] = useState<MarkhorData>({
     personImage: null,
     content: "Meet [Noor Ul Ain]: Who help small Businesses to grow their sales & visibility through [social media and digital Marketing].",
-    logo: null,
+    logo: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=200&h=200&auto=format&fit=crop", // Elegant Gold/Dark placeholder for Markhor
     topRightLogo: null,
-    optionalTopText: ""
+    optionalTopText: "",
+    aspectRatio: '9/16'
   });
 
   // Skyronix State
@@ -139,6 +140,25 @@ export default function App() {
                 {mode === 'markhor' && (
                   <div className="space-y-6">
                     <div className="glass-card p-6 rounded-[20px] space-y-4">
+                      <h3 className="text-sm font-bold text-white/90">Platform Compatibility</h3>
+                      <div className="flex gap-2 p-1 bg-black/20 rounded-xl">
+                        {[
+                          { id: '9/16', label: 'TikTok/Story', sub: '9:16' },
+                          { id: '4/5', label: 'FB/IG Portrait', sub: '4:5' }
+                        ].map((ratio) => (
+                          <button 
+                            key={ratio.id}
+                            onClick={() => setMarkhor({...markhor, aspectRatio: ratio.id as any})}
+                            className={`flex-1 flex flex-col items-center py-2 rounded-lg transition-all ${markhor.aspectRatio === ratio.id ? 'bg-white/10 text-white shadow-lg' : 'bg-transparent text-neutral-500 hover:text-neutral-300'}`}
+                          >
+                            <span className="text-[9px] font-black uppercase tracking-tight">{ratio.label}</span>
+                            <span className="text-[8px] opacity-50">{ratio.sub}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="glass-card p-6 rounded-[20px] space-y-4">
                       <h3 className="text-sm font-bold text-white/90">Canvas Settings</h3>
                       <label className="block">
                         <span className="text-[11px] font-bold uppercase tracking-[1px] text-white/40">Content Text</span>
@@ -167,11 +187,11 @@ export default function App() {
                         </div>
                       </div>
                       <label className="block">
-                        <span className="text-[11px] font-bold uppercase tracking-[1px] text-white/40">Main Logo (Top Left)</span>
+                        <span className="text-[11px] font-bold uppercase tracking-[1px] text-white/40">Left Side Logo (Permanent)</span>
                         <input type="file" className="mt-2 block w-full text-xs text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-bold file:uppercase file:bg-white/10 file:text-white hover:file:bg-white/20" onChange={(e) => handleImageUpload(e, (url) => setMarkhor({...markhor, logo: url}))} />
                       </label>
                       <label className="block">
-                        <span className="text-[11px] font-bold uppercase tracking-[1px] text-white/40">Optional Logo (Top Right)</span>
+                        <span className="text-[11px] font-bold uppercase tracking-[1px] text-white/40">Right Side Logo (Top Right)</span>
                         <input type="file" className="mt-2 block w-full text-xs text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-bold file:uppercase file:bg-white/10 file:text-white hover:file:bg-white/20" onChange={(e) => handleImageUpload(e, (url) => setMarkhor({...markhor, topRightLogo: url}))} />
                       </label>
                     </div>
@@ -339,12 +359,12 @@ export default function App() {
               <div className="flex items-center gap-10 opacity-40 grayscale group-hover:grayscale-0 transition-all">
                 <div className="text-center">
                    <span className="block text-[10px] font-bold uppercase tracking-widest mb-1">Format</span>
-                   <span className="text-sm font-medium">1080 x 1350</span>
+                   <span className="text-sm font-medium">{markhor.aspectRatio === '9/16' ? '1080 x 1920' : '1080 x 1350'}</span>
                 </div>
                 <div className="h-8 w-px bg-white/20" />
                 <div className="text-center">
                    <span className="block text-[10px] font-bold uppercase tracking-widest mb-1">Ratio</span>
-                   <span className="text-sm font-medium">4:5 Portrait</span>
+                   <span className="text-sm font-medium">{markhor.aspectRatio === '9/16' ? '9:16 vertical' : '4:5 Portrait'}</span>
                 </div>
                 <div className="h-8 w-px bg-white/20" />
                 <div className="text-center">

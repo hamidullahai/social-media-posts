@@ -24,6 +24,8 @@ export interface SkyronixData {
   subHeadline?: string;
   points?: SkyronixPoint[];
   summary?: string;
+  aspectRatio: '1/1' | '4/5' | '9/16';
+  brandLogo: string | null;
 }
 
 export interface GeneralData {

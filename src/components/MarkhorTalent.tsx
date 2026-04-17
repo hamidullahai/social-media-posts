@@ -9,6 +9,9 @@ interface Props {
 }
 
 export default function MarkhorTalent({ data, containerRef }: Props) {
+  // Select aspect ratio class
+  const aspectClass = data.aspectRatio === '9/16' ? 'aspect-[9/16]' : data.aspectRatio === '4/5' ? 'aspect-[4/5]' : 'aspect-square';
+
   // Logic to parse potential highlights in format [word]
   const renderTextWithHighlights = (text: string) => {
     const parts = text.split(/(\[.*?\])/g);
@@ -31,7 +34,7 @@ export default function MarkhorTalent({ data, containerRef }: Props) {
   return (
     <div 
       ref={containerRef}
-      className={`relative w-full ${data.aspectRatio === '9/16' ? 'aspect-[9/16]' : 'aspect-[4/5]'} bg-neutral-900 overflow-hidden shadow-2xl flex flex-col`}
+      className={`relative w-full ${aspectClass} bg-neutral-900 overflow-hidden shadow-2xl flex flex-col font-sans transition-all duration-300`}
       id="markhor-template"
     >
       {/* Top Section: Person Picture (Dynamic remaining space) */}

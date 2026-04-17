@@ -49,7 +49,9 @@ export default function App() {
       { title: "Trust", description: "Trust is something that what you tell the audience and what you give to the audience must true.", iconType: 'shield' },
       { title: "Value", description: "And value is what you give to your audience, if you give a service or product your audience must get value.", iconType: 'diamond' }
     ],
-    summary: "These two combinations work really well, so become trustable and give value to others."
+    summary: "These two combinations work really well, so become trustable and give value to others.",
+    aspectRatio: '1/1',
+    brandLogo: "https://ais-pre-zpers275wfmmnffkas2ert-491446770743.asia-east1.run.app/attachments/bd53d9e8-3ea9-42b7-84a5-3a07af1d774e"
   });
 
   const handleSummarizeSkyronix = async () => {
@@ -119,7 +121,13 @@ export default function App() {
     if (previewRef.current === null) return;
     setIsProcessing(true);
     try {
-      const dataUrl = await toPng(previewRef.current, { quality: 1.0 });
+      // Create a clone or just use the current ref with proper timing
+      // We use a higher pixelRatio for HD/Print quality
+      const dataUrl = await toPng(previewRef.current, { 
+        quality: 1.0, 
+        pixelRatio: 2,
+        cacheBust: true,
+      });
       const link = document.createElement('a');
       link.download = `social-snapshot-${mode}-${Date.now()}.png`;
       link.href = dataUrl;
@@ -252,6 +260,26 @@ export default function App() {
                 {mode === 'skyronix' && (
                   <div className="space-y-6">
                     <div className="glass-card p-6 rounded-[20px] space-y-4">
+                      <h3 className="text-sm font-bold text-white/90">Platform Compatibility</h3>
+                      <div className="flex gap-2 p-1 bg-black/20 rounded-xl">
+                        {[
+                          { id: '1/1', label: 'Square', sub: '1:1' },
+                          { id: '4/5', label: 'FB/IG Portrait', sub: '4:5' },
+                          { id: '9/16', label: 'TikTok/Story', sub: '9:16' }
+                        ].map((ratio) => (
+                          <button 
+                            key={ratio.id}
+                            onClick={() => setSkyronix({...skyronix, aspectRatio: ratio.id as any})}
+                            className={`flex-1 flex flex-col items-center py-2 rounded-lg transition-all ${skyronix.aspectRatio === ratio.id ? 'bg-white/10 text-white shadow-lg' : 'bg-transparent text-neutral-500 hover:text-neutral-300'}`}
+                          >
+                            <span className="text-[9px] font-black uppercase tracking-tight">{ratio.label}</span>
+                            <span className="text-[8px] opacity-50">{ratio.sub}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="glass-card p-6 rounded-[20px] space-y-4">
                       <h3 className="text-sm font-bold text-white/90">Identity</h3>
                       <label className="block">
                         <span className="text-[11px] font-bold uppercase tracking-[1px] text-white/40">Profile Name</span>
@@ -284,6 +312,10 @@ export default function App() {
                           <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => handleImageUpload(e, (url) => setSkyronix({...skyronix, userImage: url}))} />
                         </div>
                       </div>
+                      <label className="block">
+                        <span className="text-[11px] font-bold uppercase tracking-[1px] text-white/40">Brand Logo (Footer)</span>
+                        <input type="file" className="mt-2 block w-full text-xs text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-bold file:uppercase file:bg-white/10 file:text-white hover:file:bg-white/20" onChange={(e) => handleImageUpload(e, (url) => setSkyronix({...skyronix, brandLogo: url}))} />
+                      </label>
                       <label className="block">
                         <span className="text-[11px] font-bold uppercase tracking-[1px] text-white/40">Full Narrative</span>
                         <textarea 
@@ -419,12 +451,18 @@ export default function App() {
               <div className="flex items-center gap-10 opacity-40 grayscale group-hover:grayscale-0 transition-all">
                 <div className="text-center">
                    <span className="block text-[10px] font-bold uppercase tracking-widest mb-1">Format</span>
-                   <span className="text-sm font-medium">{markhor.aspectRatio === '9/16' ? '1080 x 1920' : '1080 x 1350'}</span>
+                   <span className="text-sm font-medium">
+                     {mode === 'markhor' ? (markhor.aspectRatio === '9/16' ? '1080 x 1920' : '1080 x 1350') : 
+                      skyronix.aspectRatio === '9/16' ? '1080 x 1920' : skyronix.aspectRatio === '4/5' ? '1080 x 1350' : '1080 x 1080'}
+                   </span>
                 </div>
                 <div className="h-8 w-px bg-white/20" />
                 <div className="text-center">
                    <span className="block text-[10px] font-bold uppercase tracking-widest mb-1">Ratio</span>
-                   <span className="text-sm font-medium">{markhor.aspectRatio === '9/16' ? '9:16 vertical' : '4:5 Portrait'}</span>
+                   <span className="text-sm font-medium">
+                     {mode === 'markhor' ? (markhor.aspectRatio === '9/16' ? '9:16 vertical' : '4:5 Portrait') :
+                      skyronix.aspectRatio === '9/16' ? '9:16 Story' : skyronix.aspectRatio === '4/5' ? '4:5 Portrait' : '1:1 Square'}
+                   </span>
                 </div>
                 <div className="h-8 w-px bg-white/20" />
                 <div className="text-center">

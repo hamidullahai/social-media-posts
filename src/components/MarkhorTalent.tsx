@@ -76,34 +76,36 @@ export default function MarkhorTalent({ data, containerRef }: Props) {
         )}
       </div>
 
-      {/* Content Content Container */}
-      <div className="relative z-20 px-10 pb-12 w-full text-center">
-        <motion.div
-           initial={{ opacity: 0, y: 30 }}
-           animate={{ opacity: 1, y: 0 }}
-           className="mb-8"
-        >
-          <div className="text-white font-display font-black text-2xl md:text-3xl leading-[1.3] drop-shadow-lg uppercase">
-            {renderTextWithHighlights(data.content)}
-          </div>
-        </motion.div>
+      {/* Content Content Container with dedicated dark background area */}
+      <div className="relative z-20 w-full px-6 pb-6">
+        <div className="bg-black/80 backdrop-blur-md rounded-[32px] p-10 border border-white/5 shadow-2xl text-center">
+          <motion.div
+             initial={{ opacity: 0, y: 30 }}
+             animate={{ opacity: 1, y: 0 }}
+             className="mb-8"
+          >
+            <div className="text-white font-display font-black text-2xl md:text-3xl leading-[1.3] drop-shadow-lg uppercase">
+              {renderTextWithHighlights(data.content)}
+            </div>
+          </motion.div>
 
-        {/* Social Media Icons (matching the image) */}
-        <div className="flex items-center justify-center gap-4 mt-6">
-           {[
-             { Icon: Facebook, color: 'bg-[#FBBF24]' },
-             { Icon: Instagram, color: 'bg-[#FBBF24]' },
-             { Icon: Linkedin, color: 'bg-[#FBBF24]' },
-             { Icon: Twitter, color: 'bg-[#FBBF24]' },
-             { Icon: Music2, color: 'bg-[#FBBF24]' }
-           ].map((item, idx) => (
-             <div 
-               key={idx} 
-               className={`${item.color} p-2.5 rounded-full text-black shadow-lg hover:scale-110 transition-transform cursor-pointer`}
-             >
-               <item.Icon size={18} strokeWidth={3} />
-             </div>
-           ))}
+          {/* Social Media Icons */}
+          <div className="flex items-center justify-center gap-4 mt-6">
+             {[
+               { Icon: Facebook, color: 'bg-[#FBBF24]' },
+               { Icon: Instagram, color: 'bg-[#FBBF24]' },
+               { Icon: Linkedin, color: 'bg-[#FBBF24]' },
+               { Icon: Twitter, color: 'bg-[#FBBF24]' },
+               { Icon: Music2, color: 'bg-[#FBBF24]' }
+             ].map((item, idx) => (
+               <div 
+                 key={idx} 
+                 className={`${item.color} p-2.5 rounded-full text-black shadow-lg hover:scale-110 transition-transform cursor-pointer`}
+               >
+                 <item.Icon size={18} strokeWidth={3} />
+               </div>
+             ))}
+          </div>
         </div>
       </div>
 

@@ -9,11 +9,21 @@ export interface MarkhorData {
   aspectRatio: '1/1' | '4/5' | '9/16';
 }
 
+export interface SkyronixPoint {
+  title: string;
+  description: string;
+  iconType: 'shield' | 'diamond' | 'star' | 'rocket' | 'check' | 'lightbulb';
+}
+
 export interface SkyronixData {
   userImage: string | null;
   name: string;
   description: string;
   content: string;
+  title?: string;
+  subHeadline?: string;
+  points?: SkyronixPoint[];
+  summary?: string;
 }
 
 export interface GeneralData {

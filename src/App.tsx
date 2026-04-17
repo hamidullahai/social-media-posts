@@ -41,9 +41,60 @@ export default function App() {
   const [skyronix, setSkyronix] = useState<SkyronixData>({
     userImage: null,
     name: "Hamid Ullah",
-    description: "Digital Marketing Expert with Ai Integration",
-    content: "Mastering the Art of AI in Digital Marketing"
+    description: "Digital Marketing Expert with Ai integration",
+    content: "The importance of personal branding. Trust and value are the most important things. Trust is something you tell the audience and it must be true. Value is what you give your audience through product or service.",
+    title: "The Importance of Personal Branding",
+    subHeadline: "In personal branding the most important thing is Trust and Value",
+    points: [
+      { title: "Trust", description: "Trust is something that what you tell the audience and what you give to the audience must true.", iconType: 'shield' },
+      { title: "Value", description: "And value is what you give to your audience, if you give a service or product your audience must get value.", iconType: 'diamond' }
+    ],
+    summary: "These two combinations work really well, so become trustable and give value to others."
   });
+
+  const handleSummarizeSkyronix = async () => {
+    if (!skyronix.content) return;
+    setIsProcessing(true);
+    try {
+      const prompt = `
+        Analyze the following text and extract exactly:
+        1. A main catchy 'title' (max 6 words).
+        2. A 'subHeadline' that bridges the title to the main points (max 15 words).
+        3. Between 1 to 4 strategic 'points' based on the text's depth. Each point must have a short 'title' (1-2 words), a 'description' (max 25 words), and an 'iconType' (choose one: shield, diamond, star, rocket, check, lightbulb).
+        4. A closing 'summary' statement (max 20 words).
+
+        Return ONLY a JSON object with this structure:
+        {
+          "title": "...",
+          "subHeadline": "...",
+          "points": [
+            { "title": "...", "description": "...", "iconType": "..." }
+          ],
+          "summary": "..."
+        }
+
+        Input Text: "${skyronix.content}"
+      `;
+
+      const jsonStr = await generateAIText(prompt);
+      // Try to extract JSON if there is extra text
+      const match = jsonStr.match(/\{[\s\S]*\}/);
+      if (match) {
+        const result = JSON.parse(match[0]);
+        setSkyronix(prev => ({ 
+          ...prev, 
+          title: result.title,
+          subHeadline: result.subHeadline,
+          points: result.points,
+          summary: result.summary
+        }));
+      }
+    } catch (err) {
+      console.error('Extraction failed', err);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   // General State
   const [general, setGeneral] = useState<GeneralData>({
@@ -234,13 +285,22 @@ export default function App() {
                         </div>
                       </div>
                       <label className="block">
-                        <span className="text-[11px] font-bold uppercase tracking-[1px] text-white/40">Headliner Text</span>
+                        <span className="text-[11px] font-bold uppercase tracking-[1px] text-white/40">Full Narrative</span>
                         <textarea 
                           value={skyronix.content}
                           onChange={(e) => setSkyronix({...skyronix, content: e.target.value})}
+                          placeholder="Enter your full message here..."
                           className="mt-2 w-full bg-black/20 border border-white/10 rounded-xl p-3 text-sm focus:border-aqua-primary outline-none transition-all h-24"
                         />
                       </label>
+                      <button 
+                        onClick={handleSummarizeSkyronix}
+                        disabled={isProcessing || !skyronix.content}
+                        className="w-full bg-gold-primary/20 border border-gold-primary text-gold-primary font-bold py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-gold-primary hover:text-black transition-all disabled:opacity-50 uppercase text-[10px] tracking-widest"
+                      >
+                        {isProcessing ? <RefreshCw className="animate-spin" size={16} /> : <Sparkles size={16} />}
+                        <span>Extract Main Points</span>
+                      </button>
                     </div>
                   </div>
                 )}
